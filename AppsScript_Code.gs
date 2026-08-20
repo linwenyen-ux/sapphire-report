@@ -40,8 +40,9 @@ var ORDER_INFO_COLUMNS = [
   ['oClinicName',    '醫院/診所名稱'],
   ['oContactName',   '聯繫人姓名'],
   ['oContactTitle',  '職稱'],
-  ['oPhone',         '電話'],
+  ['oCountry',       '國家'],
   ['oShipAddress',   '收件地址'],
+  ['oPhone',         '電話'],
   ['oEmail',         '電子郵件'],
   ['oRemark',        '訂單備註'],
   ['oSubmitTime',    '填答時間']
@@ -135,7 +136,8 @@ function test_doPost_tipOrder() {
       contents: JSON.stringify({
         formType: 'tipOrder',
         oClinicName: '測試診所', oContactName: '陳小姐', oContactTitle: 'Manager',
-        oPhone: '0912345678', oShipAddress: '台北市信義區...', oEmail: 'test@example.com',
+        oCountry: '台灣', oShipAddress: '台北市信義區...',
+        oPhone: '0912345678', oEmail: 'test@example.com',
         oRemark: '', tip_ST100: '2', tip_ST200: '5', tip_ST700: '3',
         oSubmitTime: new Date().toISOString()
       })
