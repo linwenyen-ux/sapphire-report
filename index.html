@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Sapphire Laser Installation Report</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-mark-512.png">
+<meta name="theme-color" content="#1b365d">
+<style>
+:root{
+  --navy1:#1b365d; --navy2:#0f223f; --accent:#4a90c2;
+  --bg:#f6f8fd; --card:#ffffff; --ink:#1e293b; --sub:#5b6472;
+  --line:#e3e7ed; --ok:#1e8449; --bad:#c0392b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--ink);}
+.header{background:linear-gradient(135deg,var(--navy1),var(--navy2));color:#fff;
+  padding:14px 20px 12px;display:flex;align-items:center;gap:10px;}
+.header img{height:34px;flex-shrink:0}
+.header h1{font-size:16px;margin:0;font-weight:600;min-width:0;overflow-wrap:break-word}
+.wrap{max-width:520px;margin:0 auto;padding:12px 16px 110px;}
+.progress{display:flex;gap:6px;margin:12px 0 4px;}
+.progress .seg{flex:1;height:5px;border-radius:3px;background:var(--line);}
+.progress .seg.on{background:var(--accent);}
+.step-label{font-size:12.5px;color:var(--sub);margin-bottom:10px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px;box-shadow:0 2px 10px rgba(20,40,80,.05);}
+.screen{display:none;}
+.screen.active{display:block;}
+.page{display:none;}
+.page.active{display:block;}
+.field{margin-bottom:12px;}
+label{display:block;font-size:13.5px;font-weight:600;color:var(--navy1);margin-bottom:5px;}
+label .opt{font-weight:400;color:var(--sub);font-size:12px;}
+input[type=text],input[type=email],input[type=tel],input[type=date],
+input[type=datetime-local],select,textarea{
+  width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;
+  font-size:15px;background:#fff;color:var(--ink);font-family:inherit;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);}
+textarea{min-height:80px;resize:vertical;}
+.err{border-color:var(--bad) !important;}
+.err-msg{color:var(--bad);font-size:12.5px;margin-top:5px;display:none;}
+.err-msg.show{display:block;}
+.seg-btns{display:flex;gap:8px;}
+.seg-btns button{flex:1;padding:11px 8px;border-radius:9px;border:1.5px solid var(--line);
+  background:#fff;font-size:14px;color:var(--ink);cursor:pointer;font-family:inherit;}
+.seg-btns button.sel-ok{background:#eafaf0;border-color:var(--ok);color:var(--ok);font-weight:600;}
+.seg-btns button.sel-bad{background:#fdecea;border-color:var(--bad);color:var(--bad);font-weight:600;}
+.subnote{display:none;margin-top:10px;}
+.subnote.show{display:block;}
+.qty-row{display:flex;gap:8px;align-items:center;}
+.qty-row select{width:78px;flex:none;}
+.qty-row input{flex:1;}
+.tip-item{margin-bottom:12px;}
+.tip-item .tip-name{font-size:13.5px;font-weight:600;color:var(--navy1);}
+.tip-item .tip-spec{font-size:12px;color:var(--sub);margin-bottom:5px;}
+.cat-heading{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;
+  letter-spacing:.4px;margin:16px 0 8px;}
+.cat-heading:first-child{margin-top:0;}
+.nav-bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+  box-shadow:0 -6px 16px rgba(20,40,80,.10);
+  padding:12px 16px;display:flex;gap:10px;max-width:520px;margin:0 auto;}
+.btn{flex:1;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:600;
+  cursor:pointer;font-family:inherit;}
+.btn-primary{background:var(--navy1);color:#fff;}
+.btn-primary:disabled{background:#aab4c4;cursor:not-allowed;}
+.btn-ghost{background:#eef1f6;color:var(--navy1);}
+.summary-item{display:flex;justify-content:space-between;gap:10px;padding:8px 0;
+  border-bottom:1px solid var(--line);font-size:13.5px;}
+.summary-item .k{color:var(--sub);flex:none;width:42%;}
+.summary-item .v{text-align:right;flex:1;word-break:break-word;}
+.done{display:none;text-align:center;padding:60px 20px;}
+.done.show{display:block;}
+.done .ic{font-size:52px;}
+.hint{font-size:12px;color:var(--sub);margin-top:4px;}
+.done-brand{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);}
+.done-brand img{height:56px;}
+.done-url{font-size:25px;color:var(--sub);margin-top:8px;letter-spacing:.2px;}
+.home-cards{display:flex;flex-direction:column;gap:14px;margin-top:4px;}
+.home-card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:24px 20px;text-align:center;box-shadow:0 2px 10px rgba(20,40,80,.05);
+  cursor:pointer;font-family:inherit;}
+.home-card .home-ic{font-size:36px;margin-bottom:10px;}
+.home-card .home-title{font-size:16px;font-weight:700;color:var(--navy1);margin-bottom:4px;}
+.home-card .home-desc{font-size:12.5px;color:var(--sub);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="icon.jpg" alt="LIGHTMED">
+  <h1 id="headerTitle">Sapphire Laser Installation Report</h1>
+</div>
+
+<div class="wrap">
+
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="screenHome">
+    <div class="home-cards">
+      <button type="button" class="home-card" id="goInstallBtn">
+        <div class="home-ic">📋</div>
+        <div class="home-title">Sapphire Laser Installation Report</div>
+        <div class="home-desc">Report a new installation at your clinic</div>
+      </button>
+      <button type="button" class="home-card" id="goOrderBtn">
+        <div class="home-ic">🛒</div>
+        <div class="home-title">Order Sapphire Tips or Spare Parts</div>
+        <div class="home-desc">Order laser tips and spare parts by model</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- INSTALL REPORT SCREEN -->
+  <div class="screen" id="screenInstall">
+    <div class="progress" id="installProgressBar"></div>
+    <div class="step-label" id="installStepLabel"></div>
+
+    <form id="installForm" class="card" novalidate>
+
+      <div class="page active" data-page="1">
+        <div class="field">
+          <label>Hospital / Clinic Name</label>
+          <input type="text" name="clinicName" required>
+          <div class="err-msg">Please enter the hospital/clinic name</div>
+        </div>
+        <div class="field">
+          <label>Doctor / Contact Person Name</label>
+          <input type="text" name="doctorName" required>
+          <div class="err-msg">Please enter the doctor/contact person's name</div>
+        </div>
+        <div class="field">
+          <label>Job Title</label>
+          <select name="contactTitle" required>
+            <option value="">Please select</option>
+            <option>Owner</option><option>Director</option>
+            <option>Manager</option><option>Technician</option>
+          </select>
+          <div class="err-msg">Please select a job title</div>
+        </div>
+        <div class="field">
+          <label>Country</label>
+          <select name="country" required>
+            <option value="">Please select</option>
+            <option>Taiwan</option><option>China</option><option>Hong Kong</option>
+            <option>Japan</option><option>South Korea</option><option>Singapore</option>
+            <option>Malaysia</option><option>Thailand</option><option>Vietnam</option>
+            <option>United States</option><option>Canada</option><option>Other</option>
+          </select>
+          <div class="err-msg">Please select a country</div>
+        </div>
+        <div class="field">
+          <label>Hospital / Clinic Address</label>
+          <input type="text" name="clinicAddress" required>
+          <div class="err-msg">Please enter the address</div>
+        </div>
+        <div class="field">
+          <label>Hospital / Clinic Phone</label>
+          <input type="tel" name="clinicPhone" required>
+          <div class="err-msg">Please enter the phone number</div>
+        </div>
+        <div class="field">
+          <label>Contact Email</label>
+          <input type="email" name="contactEmail" required>
+          <div class="err-msg">Please enter a valid email address</div>
+        </div>
+      </div>
+
+      <div class="page" data-page="2">
+        <div class="field">
+          <label>Installation Date</label>
+          <input type="date" name="installDate" required>
+          <div class="err-msg">Please select the installation date</div>
+        </div>
+        <div class="field">
+          <label>Main Unit Serial Number <span class="opt">Format: EYSAA + 1 digit + 6 digits, e.g. EYSAA3-123456</span></label>
+          <input type="text" name="mainSN" required placeholder="EYSAA3-123456" autocapitalize="characters">
+          <div class="err-msg">Invalid format. Must be EYSAA + 1 digit + "-" + 6 digits (e.g. EYSAA3-123456)</div>
+        </div>
+        <div class="field">
+          <label>Applicator Serial Number</label>
+          <input type="text" name="applicatorSN" required>
+          <div class="err-msg">Please enter the Applicator serial number</div>
+        </div>
+        <div class="field">
+          <label>Dealer</label>
+          <input type="text" name="dealer" required>
+          <div class="err-msg">Please enter the dealer</div>
+        </div>
+      </div>
+
+      <div class="page" data-page="3">
+        <div class="field">
+          <label>Main Unit Appearance Check</label>
+          <div class="seg-btns" data-picker="mainAppearance">
+            <button type="button" data-val="Normal">Normal</button>
+            <button type="button" data-val="Abnormal">Abnormal</button>
+          </div>
+          <div class="err-msg">Please select a result</div>
+          <div class="subnote">
+            <textarea name="mainAppearanceNote" placeholder="Please describe the issue"></textarea>
+            <div class="err-msg show-sub">Please describe the issue</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Laser Power Check</label>
+          <div class="seg-btns" data-picker="laserPower">
+            <button type="button" data-val="Normal">Normal</button>
+            <button type="button" data-val="Abnormal">Abnormal</button>
+          </div>
+          <div class="err-msg">Please select a result</div>
+          <div class="subnote">
+            <textarea name="laserPowerNote" placeholder="Please describe the issue"></textarea>
+            <div class="err-msg show-sub">Please describe the issue</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Handpiece Quantity</label>
+          <div class="qty-row">
+            <select name="handpieceQty">
+              <option value="0">0</option><option value="1">1</option>
+              <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+            </select>
+            <input type="text" name="handpieceNote" placeholder="Note (optional)">
+          </div>
+        </div>
+        <div class="field">
+          <label>Fiber Tip Quantity</label>
+          <div class="qty-row">
+            <select name="fiberQty">
+              <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+              <option value="9">9</option><option value="10">10</option>
+            </select>
+            <input type="text" name="fiberNote" placeholder="Note (optional)">
+          </div>
+        </div>
+        <div class="field">
+          <label>Mirror Quantity</label>
+          <div class="qty-row">
+            <select name="mirrorQty">
+              <option value="0">0</option><option value="1">1</option>
+              <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+            </select>
+            <input type="text" name="mirrorNote" placeholder="Note (optional)">
+          </div>
+        </div>
+      </div>
+
+      <div class="page" data-page="4">
+        <div class="field">
+          <label>Remarks <span class="opt">Optional</span></label>
+          <textarea name="remark"></textarea>
+        </div>
+        <div class="field">
+          <label>Please review your submission</label>
+          <div id="installSummaryBox"></div>
+        </div>
+        <input type="hidden" name="submitTime">
+      </div>
+
+    </form>
+
+    <div class="done" id="installDoneBox">
+      <div class="ic">✅</div>
+      <h2>Submitted successfully!</h2>
+      <p class="hint">Thank you for completing the installation report.</p>
+      <div class="done-brand">
+        <img src="icon.jpg" alt="LIGHTMED">
+        <div class="done-url">www.lightmed.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDER SCREEN -->
+  <div class="screen" id="screenOrder">
+    <div class="progress" id="orderProgressBar"></div>
+    <div class="step-label" id="orderStepLabel"></div>
+
+    <form id="orderForm" class="card" novalidate>
+
+      <div class="page active" data-page="1">
+        <div class="field">
+          <label>Hospital / Clinic Name</label>
+          <input type="text" name="oClinicName" required>
+          <div class="err-msg">Please enter the hospital/clinic name</div>
+        </div>
+        <div class="field">
+          <label>Contact Person Name</label>
+          <input type="text" name="oContactName" required>
+          <div class="err-msg">Please enter the contact person's name</div>
+        </div>
+        <div class="field">
+          <label>Job Title</label>
+          <select name="oContactTitle" required>
+            <option value="">Please select</option>
+            <option>Owner</option><option>Director</option>
+            <option>Manager</option><option>Technician</option>
+          </select>
+          <div class="err-msg">Please select a job title</div>
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" name="oPhone" required>
+          <div class="err-msg">Please enter the phone number</div>
+        </div>
+        <div class="field">
+          <label>Shipping Address</label>
+          <input type="text" name="oShipAddress" required>
+          <div class="err-msg">Please enter the shipping address</div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="oEmail" required>
+          <div class="err-msg">Please enter a valid email address</div>
+        </div>
+      </div>
+
+      <div class="page" data-page="2">
+        <div id="tipsPage2"></div>
+      </div>
+
+      <div class="page" data-page="3">
+        <div id="tipsPage3"></div>
+      </div>
+
+      <div class="page" data-page="4">
+        <div id="tipsPage4"></div>
+      </div>
+
+      <div class="page" data-page="5">
+        <div class="field">
+          <label>Order Notes <span class="opt">Optional</span></label>
+          <textarea name="oRemark"></textarea>
+        </div>
+        <div class="err-msg" id="orderNoItemsErr">Please select at least one item before submitting.</div>
+        <div class="field">
+          <label>Please review your order</label>
+          <div id="orderSummaryBox"></div>
+        </div>
+        <input type="hidden" name="oSubmitTime">
+      </div>
+
+    </form>
+
+    <div class="done" id="orderDoneBox">
+      <div class="ic">✅</div>
+      <h2>Order submitted successfully!</h2>
+      <p class="hint">Thank you for your order. Our team will follow up shortly.</p>
+      <div class="done-brand">
+        <img src="icon.jpg" alt="LIGHTMED">
+        <div class="done-url">www.lightmed.com</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-bar" id="navBar">
+  <button type="button" class="btn btn-ghost" id="btnPrev">Back</button>
+  <button type="button" class="btn btn-primary" id="btnNext">Next</button>
+</div>
+
+<script>
+const TIPS = [
+  {sku:'ST010', spec:'1.35 x 6.3 mm',  category:'Magnum Tip',       page:2},
+  {sku:'ST100', spec:'1.35 x 14 mm',   category:'Cylindrical Tips', page:2},
+  {sku:'ST110', spec:'1.35 x 17 mm',   category:'Cylindrical Tips', page:2},
+  {sku:'ST120', spec:'1.35 x 19 mm',   category:'Cylindrical Tips', page:2},
+  {sku:'ST200', spec:'0.8 x 14 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST201', spec:'0.8 x 8 mm',     category:'Conical Tips',     page:3},
+  {sku:'ST205', spec:'0.8 x 17 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST214', spec:'1.0 x 10 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST215', spec:'1.0 x 14 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST220', spec:'1.0 x 17 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST240', spec:'0.6 x 17 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST250', spec:'0.4 x 17 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST270', spec:'0.2 x 17 mm',    category:'Conical Tips',     page:3},
+  {sku:'ST700', spec:'0.3 x 17 mm',    category:'Chisel Tip',       page:4},
+  {sku:'ST701', spec:'0.4 x 17 mm',    category:'Blade Tip',        page:4},
+  {sku:'ST900', spec:'1.35 x 19 mm',   category:'Side Firing Tip',  page:4},
+];
+const TIP_MAX_QTY = 20;
+
+function buildTipPage(pageNum, containerId) {
+  const container = document.getElementById(containerId);
+  const items = TIPS.filter(t => t.page === pageNum);
+  let lastCat = null;
+  let html = '';
+  items.forEach(t => {
+    if (t.category !== lastCat) {
+      html += `<div class="cat-heading">${t.category}</div>`;
+      lastCat = t.category;
+    }
+    let opts = '';
+    for (let i = 0; i <= TIP_MAX_QTY; i++) opts += `<option value="${i}">${i}</option>`;
+    html += `
+      <div class="tip-item">
+        <div class="tip-name">${t.sku}</div>
+        <div class="tip-spec">${t.spec}</div>
+        <div class="qty-row">
+          <select name="tip_${t.sku}" data-tip-qty="${t.sku}">${opts}</select>
+          <input type="text" name="tipNote_${t.sku}" placeholder="Note (optional)">
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+buildTipPage(2, 'tipsPage2');
+buildTipPage(3, 'tipsPage3');
+buildTipPage(4, 'tipsPage4');
+
+const headerTitle = document.getElementById('headerTitle');
+const screens = {
+  home: document.getElementById('screenHome'),
+  install: document.getElementById('screenInstall'),
+  order: document.getElementById('screenOrder'),
+};
+const navBar = document.getElementById('navBar');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+
+const installForm = document.getElementById('installForm');
+const installPages = [...installForm.querySelectorAll('.page')];
+const installProgressBar = document.getElementById('installProgressBar');
+const installStepLabel = document.getElementById('installStepLabel');
+const installDoneBox = document.getElementById('installDoneBox');
+const INSTALL_TOTAL = 4;
+const INSTALL_STEP_NAMES = {
+  1: 'Clinic & Contact Info', 2: 'Installation Details', 3: 'Checks & Consumables', 4: 'Remarks & Review'
+};
+let installCurrent = 1;
+
+const orderForm = document.getElementById('orderForm');
+const orderPages = [...orderForm.querySelectorAll('.page')];
+const orderProgressBar = document.getElementById('orderProgressBar');
+const orderStepLabel = document.getElementById('orderStepLabel');
+const orderDoneBox = document.getElementById('orderDoneBox');
+const ORDER_TOTAL = 5;
+const ORDER_STEP_NAMES = {
+  1: 'Shipping Info', 2: 'Magnum & Cylindrical Tips', 3: 'Conical Tips',
+  4: 'Chisel, Blade & Side Firing Tips', 5: 'Notes & Review'
+};
+let orderCurrent = 1;
+
+let currentFlow = 'home';
+
+function buildProgress(bar, total) {
+  bar.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    bar.appendChild(seg);
+  }
+}
+buildProgress(installProgressBar, INSTALL_TOTAL);
+buildProgress(orderProgressBar, ORDER_TOTAL);
+
+// picker (Normal/Abnormal) wiring — install form only
+installForm.querySelectorAll('[data-picker]').forEach(group => {
+  const field = group.closest('.field');
+  const subnote = field.querySelector('.subnote');
+  group.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('button').forEach(b => b.classList.remove('sel-ok','sel-bad'));
+      btn.classList.add(btn.dataset.val === 'Abnormal' ? 'sel-bad' : 'sel-ok');
+      group.dataset.value = btn.dataset.val;
+      field.querySelector(':scope > .err-msg').classList.remove('show');
+      if (btn.dataset.val === 'Abnormal') {
+        subnote.classList.add('show');
+      } else {
+        subnote.classList.remove('show');
+        subnote.querySelector('.err-msg').classList.remove('show');
+      }
+    });
+  });
+});
+
+function showScreen(flow) {
+  currentFlow = flow;
+  Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === flow));
+  navBar.style.display = flow === 'home' ? 'none' : 'flex';
+  headerTitle.textContent = flow === 'order'
+    ? 'Order Sapphire Tips or Spare Parts'
+    : 'Sapphire Laser Installation Report';
+  if (flow === 'install') showInstallPage(installCurrent);
+  if (flow === 'order') showOrderPage(orderCurrent);
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  installForm.style.display = '';
+  installDoneBox.classList.remove('show');
+  orderForm.style.display = '';
+  orderDoneBox.classList.remove('show');
+  installCurrent = 1;
+  orderCurrent = 1;
+  showScreen('home');
+}
+
+document.getElementById('goInstallBtn').addEventListener('click', () => showScreen('install'));
+document.getElementById('goOrderBtn').addEventListener('click', () => showScreen('order'));
+
+function showInstallPage(n) {
+  installPages.forEach(p => p.classList.toggle('active', +p.dataset.page === n));
+  [...installProgressBar.children].forEach((seg, i) => seg.classList.toggle('on', i < n));
+  installStepLabel.textContent = `Step ${n} of ${INSTALL_TOTAL}: ${INSTALL_STEP_NAMES[n]}`;
+  btnPrev.textContent = 'Back';
+  btnNext.textContent = n === INSTALL_TOTAL ? 'Submit' : 'Next';
+  if (n === INSTALL_TOTAL) buildInstallSummary();
+}
+
+function showOrderPage(n) {
+  orderPages.forEach(p => p.classList.toggle('active', +p.dataset.page === n));
+  [...orderProgressBar.children].forEach((seg, i) => seg.classList.toggle('on', i < n));
+  orderStepLabel.textContent = `Step ${n} of ${ORDER_TOTAL}: ${ORDER_STEP_NAMES[n]}`;
+  btnPrev.textContent = 'Back';
+  btnNext.textContent = n === ORDER_TOTAL ? 'Submit Order' : 'Next';
+  if (n === ORDER_TOTAL) buildOrderSummary();
+}
+
+const MAIN_SN_RE = /^EYSAA\d-\d{6}$/;
+
+function validateGenericPage(pageEl) {
+  let ok = true;
+  pageEl.querySelectorAll('input[required], select[required]').forEach(el => {
+    let bad = !el.value.trim();
+    if (el.name === 'mainSN' && !bad) {
+      el.value = el.value.toUpperCase();
+      bad = !MAIN_SN_RE.test(el.value);
+    }
+    if ((el.name === 'contactEmail' || el.name === 'oEmail') && !bad) {
+      bad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
+    }
+    el.classList.toggle('err', bad);
+    const msg = el.closest('.field').querySelector('.err-msg');
+    if (msg) msg.classList.toggle('show', bad);
+    if (bad) ok = false;
+  });
+  return ok;
+}
+
+function validateInstallPage(n) {
+  const pageEl = installPages[n - 1];
+  let ok = validateGenericPage(pageEl);
+
+  if (n === 3) {
+    pageEl.querySelectorAll('[data-picker]').forEach(group => {
+      const field = group.closest('.field');
+      const val = group.dataset.value;
+      const groupErr = field.querySelector(':scope > .err-msg');
+      if (!val) { groupErr.classList.add('show'); ok = false; return; }
+      groupErr.classList.remove('show');
+      if (val === 'Abnormal') {
+        const noteEl = field.querySelector('.subnote textarea');
+        const subErr = field.querySelector('.subnote .err-msg');
+        const noteBad = !noteEl.value.trim();
+        noteEl.classList.toggle('err', noteBad);
+        subErr.classList.toggle('show', noteBad);
+        if (noteBad) ok = false;
+      }
+    });
+  }
+  return ok;
+}
+
+function validateOrderPage(n) {
+  const pageEl = orderPages[n - 1];
+  let ok = validateGenericPage(pageEl);
+
+  if (n === ORDER_TOTAL) {
+    const anyQty = TIPS.some(t => +orderForm[`tip_${t.sku}`].value > 0);
+    const err = document.getElementById('orderNoItemsErr');
+    err.classList.toggle('show', !anyQty);
+    if (!anyQty) ok = false;
+  }
+  return ok;
+}
+
+function fieldLabel(form, name) {
+  const el = form.querySelector(`[name="${name}"]`);
+  const lbl = el ? el.closest('.field')?.querySelector('label') : null;
+  return lbl ? lbl.textContent.replace(/\s*(Optional|Format:.*)/g, '').trim() : name;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function collectFormData(form) {
+  const data = {};
+  new FormData(form).forEach((v, k) => data[k] = v);
+  form.querySelectorAll('[data-picker]').forEach(g => data[g.dataset.picker] = g.dataset.value || '');
+  return data;
+}
+
+function buildInstallSummary() {
+  const data = collectFormData(installForm);
+  const order = ['clinicName','doctorName','contactTitle','country','clinicAddress','clinicPhone',
+    'contactEmail','installDate','mainSN','applicatorSN',
+    'dealer','mainAppearance','mainAppearanceNote','laserPower','laserPowerNote',
+    'handpieceQty','handpieceNote','fiberQty','fiberNote','mirrorQty','mirrorNote','remark'];
+  const box = document.getElementById('installSummaryBox');
+  box.innerHTML = order
+    .filter(k => data[k] !== undefined && data[k] !== '')
+    .map(k => `<div class="summary-item"><div class="k">${fieldLabel(installForm, k) || k}</div><div class="v">${escapeHtml(data[k])}</div></div>`)
+    .join('');
+}
+
+function buildOrderSummary() {
+  const data = collectFormData(orderForm);
+  const infoOrder = ['oClinicName','oContactName','oContactTitle','oPhone','oShipAddress','oEmail','oRemark'];
+  const box = document.getElementById('orderSummaryBox');
+  let html = infoOrder
+    .filter(k => data[k] !== undefined && data[k] !== '')
+    .map(k => `<div class="summary-item"><div class="k">${fieldLabel(orderForm, k) || k}</div><div class="v">${escapeHtml(data[k])}</div></div>`)
+    .join('');
+  TIPS.forEach(t => {
+    const qty = +data[`tip_${t.sku}`] || 0;
+    if (qty > 0) {
+      const note = data[`tipNote_${t.sku}`];
+      const label = `${t.sku} (${t.spec})${note ? ' — ' + escapeHtml(note) : ''}`;
+      html += `<div class="summary-item"><div class="k">${label}</div><div class="v">x${qty}</div></div>`;
+    }
+  });
+  box.innerHTML = html;
+}
+
+btnNext.addEventListener('click', () => {
+  if (currentFlow === 'install') {
+    if (!validateInstallPage(installCurrent)) return;
+    if (installCurrent < INSTALL_TOTAL) {
+      installCurrent++;
+      showInstallPage(installCurrent);
+    } else {
+      submitInstall();
+    }
+  } else if (currentFlow === 'order') {
+    if (!validateOrderPage(orderCurrent)) return;
+    if (orderCurrent < ORDER_TOTAL) {
+      orderCurrent++;
+      showOrderPage(orderCurrent);
+    } else {
+      submitOrder();
+    }
+  }
+  window.scrollTo(0, 0);
+});
+
+btnPrev.addEventListener('click', () => {
+  if (currentFlow === 'install') {
+    if (installCurrent > 1) { installCurrent--; showInstallPage(installCurrent); }
+    else { goHome(); return; }
+  } else if (currentFlow === 'order') {
+    if (orderCurrent > 1) { orderCurrent--; showOrderPage(orderCurrent); }
+    else { goHome(); return; }
+  }
+  window.scrollTo(0, 0);
+});
+
+const WEBAPP_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+function submitInstall() {
+  btnNext.disabled = true;
+  btnNext.textContent = 'Submitting...';
+  installForm.submitTime.value = new Date().toISOString();
+  const data = collectFormData(installForm);
+  data.formType = 'installReport';
+
+  fetch(WEBAPP_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(data)
+  }).catch(() => {}).finally(() => {
+    installForm.style.display = 'none';
+    navBar.style.display = 'none';
+    installDoneBox.classList.add('show');
+    btnNext.disabled = false;
+  });
+}
+
+function submitOrder() {
+  btnNext.disabled = true;
+  btnNext.textContent = 'Submitting...';
+  orderForm.oSubmitTime.value = new Date().toISOString();
+  const data = collectFormData(orderForm);
+  data.formType = 'tipOrder';
+  TIPS.forEach(t => {
+    const qty = +data[`tip_${t.sku}`] || 0;
+    if (qty <= 0) { delete data[`tip_${t.sku}`]; delete data[`tipNote_${t.sku}`]; }
+  });
+
+  fetch(WEBAPP_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(data)
+  }).catch(() => {}).finally(() => {
+    orderForm.style.display = 'none';
+    navBar.style.display = 'none';
+    orderDoneBox.classList.add('show');
+    btnNext.disabled = false;
+  });
+}
+
+showScreen('home');
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
