@@ -509,11 +509,7 @@ function goHome() {
 }
 
 document.querySelectorAll('[data-go-home]').forEach(btn => btn.addEventListener('click', goHome));
-document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => {
-  window.close();
-  // Most browsers block closing a tab that wasn't opened by script; fall back to Home.
-  setTimeout(goHome, 300);
-}));
+document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', goHome));
 
 document.getElementById('goInstallBtn').addEventListener('click', () => showScreen('install'));
 document.getElementById('goOrderBtn').addEventListener('click', () => showScreen('order'));
