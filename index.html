@@ -71,10 +71,14 @@ textarea{min-height:80px;resize:vertical;}
   border-bottom:1px solid var(--line);font-size:13.5px;}
 .summary-item .k{color:var(--sub);flex:none;width:42%;}
 .summary-item .v{text-align:right;flex:1;word-break:break-word;}
-.done{display:none;text-align:center;padding:60px 20px;}
+.done{display:none;text-align:center;padding:60px 20px 32px;position:relative;}
 .done.show{display:block;}
 .done .ic{font-size:52px;}
 .hint{font-size:12px;color:var(--sub);margin-top:4px;}
+.done-close{position:absolute;top:14px;right:14px;background:#eef1f6;color:var(--navy1);
+  border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;}
+.done-home{max-width:220px;margin:40px auto 0;display:block;}
 .done-brand{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);}
 .done-brand img{height:56px;}
 .done-url{font-size:25px;color:var(--sub);margin-top:8px;letter-spacing:.2px;}
@@ -264,6 +268,7 @@ textarea{min-height:80px;resize:vertical;}
     </form>
 
     <div class="done" id="installDoneBox">
+      <button type="button" class="done-close" data-close>Close</button>
       <div class="ic">✅</div>
       <h2>Submitted successfully!</h2>
       <p class="hint">Thank you for completing the installation report.</p>
@@ -271,6 +276,7 @@ textarea{min-height:80px;resize:vertical;}
         <img src="icon.jpg" alt="LIGHTMED">
         <div class="done-url">www.lightmed.com</div>
       </div>
+      <button type="button" class="btn btn-primary done-home" data-go-home>Home Page</button>
     </div>
   </div>
 
@@ -346,6 +352,7 @@ textarea{min-height:80px;resize:vertical;}
     </form>
 
     <div class="done" id="orderDoneBox">
+      <button type="button" class="done-close" data-close>Close</button>
       <div class="ic">✅</div>
       <h2>Order submitted successfully!</h2>
       <p class="hint">Thank you for your order. Our team will follow up shortly.</p>
@@ -353,6 +360,7 @@ textarea{min-height:80px;resize:vertical;}
         <img src="icon.jpg" alt="LIGHTMED">
         <div class="done-url">www.lightmed.com</div>
       </div>
+      <button type="button" class="btn btn-primary done-home" data-go-home>Home Page</button>
     </div>
   </div>
 
@@ -499,6 +507,13 @@ function goHome() {
   orderCurrent = 1;
   showScreen('home');
 }
+
+document.querySelectorAll('[data-go-home]').forEach(btn => btn.addEventListener('click', goHome));
+document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => {
+  window.close();
+  // Most browsers block closing a tab that wasn't opened by script; fall back to Home.
+  setTimeout(goHome, 300);
+}));
 
 document.getElementById('goInstallBtn').addEventListener('click', () => showScreen('install'));
 document.getElementById('goOrderBtn').addEventListener('click', () => showScreen('order'));
